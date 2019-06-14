@@ -1,14 +1,15 @@
 import React from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import { PageNotFound } from './proof';
+import { Register } from './Register';
+import { LogIn } from './LogIn';
 
 
 const Routes = () => (
     <HashRouter>
     <Switch>
-    <Route path="/" component={PageNotFound} exact={true}/>
-    <Route path="/logIn" component={PageNotFound}/>
-    <Route path="/register" component={PageNotFound} />
+    <Route path="/" exact component={LogIn} />
+    <Route path="/register" component={Register} />
     <Route path="/wall" component={PageNotFound} />
     <Route path="/search" component={PageNotFound} />
     <Route component={PageNotFound}/>
