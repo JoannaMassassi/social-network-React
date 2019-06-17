@@ -1,8 +1,9 @@
 import firebase from 'firebase';
+// import app from 'firebase/app';
 
 
   // Your web app's Firebase configuration
-  const firebaseConfig = {
+  const config = {
     apiKey: "AIzaSyCt9aKiCJO0pefQY3h4G38bGuQOE_w91Wk",
     authDomain: "social-network-react-d13e0.firebaseapp.com",
     databaseURL: "https://social-network-react-d13e0.firebaseio.com",
@@ -12,4 +13,7 @@ import firebase from 'firebase';
     appId: "1:518269863233:web:3c13b8bb3d3d9826"
   };
   // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+
+const fire = firebase.initializeApp(config);
+
+export default fire;
