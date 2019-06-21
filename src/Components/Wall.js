@@ -3,26 +3,30 @@ import fire from '../Firebase/Firebase';
 import { Component } from 'react';
 
 
+
  class Wall extends Component {
-  constructor(props) {
-    super(props);
-    this.logout = this.logout.bind(this);
-  }
-
-  logout(){
-    fire.auth().signOut();
-  }
-
-
 
 
   render(){
     return (
       <div>
-        <h1>THIS IS THE WALL</h1>
-        <button onClick={this.logout}>Log Out</button>
+      <nav>
+        <p id='saludo'></p>
+        <button>Perfil</button>
+        <button onClick={() => fire.auth().signOut()}>Log Out</button>
+      
+        </nav>
+        <section id='wall'>
+        <form id='submit-post'>
+        <textarea className='post-area' name='comment' placeholder='escribe aqui' required></textarea>
+        <button id='publish'>publicar</button>
+        </form>
+        <div id='post-list'>
+        </div>
+        </section>
+        </div>
 
-      </div>
+    
     );
   }
 }
