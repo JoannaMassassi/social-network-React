@@ -1,86 +1,127 @@
-import React, { useCallback } from "react";
-import { withRouter } from "react-router";
+import React from "react";
 import fire from '../Firebase/Firebase';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form';
-import { Link } from 'react-router-dom'
+import { Component } from 'react';
+import LogIn from './LogIn';
 
-    const SignUp = ({ history }) => {
-        const handleSignUp = useCallback(async event => {
-            event.preventDefault();
-            const {email, password} = event.target.elements;
-            try {
-               await fire
-               .auth()
-               .createUserWithEmailAndPassword(email.value, password.value);
-               history.push("/wall"); 
-            } catch (error) {
-                alert(error);
-            }
-    
-    }, [history]);
 
-            return (
-              <Form onSubmit={handleSignUp} className="form1">
-              <h1>Regístrate</h1>
-        <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email </Form.Label>
-          <Form.Control name="email" type="email" placeholder="Ingresa tu email" />
-          <Form.Text className="text-muted">
-            Nunca compartiremos tu email con nadie.
-          </Form.Text>
-        </Form.Group>
-      
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label>Contraseña</Form.Label>
-          <Form.Control name="password" type="password" placeholder="Coloca tu contraseña " />
-        </Form.Group>
-        <Form.Label>¿Ya tienes una cuenta? <Link to="/">Inicia Sesión</Link></Form.Label>
-        <Button variant="outline-success" type="submit">
-          ¡Vamos!
-        </Button>
-      </Form>
-                // <div>
-                //   <h1>Sign up</h1>
-                //   <form onSubmit={handleSignUp}>
-                //     <label>
-                //       Email
-                //       <input name="email" type="email" placeholder="Email" />
-                //     </label>
-                //     <label>
-                //       Password
-                //       <input name="password" type="password" placeholder="Password" />
-                //     </label>
-                //     <button type="submit">Sign Up</button>
-                //   </form>
-                // </div>
-              );
-            };
-            
-            export default withRouter(SignUp);
-//             <div className="container-1">
-//                  <div className="email-log"  >
-//                     <h1>REGISTRARSE</h1>
-//                     <label htmlFor="exampleInputEmail1">Email adress</label>
-//                     <input value ={this.state.email} onChange={this.handleChange} type="email" name="email"
-//                     id="exampleInputEmail1" placeholder="Enter email" />
-//                  </div>
-//                  <div className="password-log"  >
-//                     <label htmlFor="exampleInputPassword1">Password</label>
-//                     <input value ={this.state.password} onChange={this.handleChange} type="password" name="password"
-//                     id="exampleInputPassword1" placeholder="Password" />
-//                  </div>
+
+
+
+class Signup extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        email: "",
+        password: "",
+        loading: true,
+        error: false,
+        loggedIn: true
+      };
+    }
+  
+    // Form Handle
+    handleChange = e => {
+      this.setState({ [e.target.name]: e.target.value });
+    };
+  
+    // Auth Change Listener
+    componentDidMount = () => {
+      fire.auth().onAuthStateChanged(user => {
+        if (user) {
+          this.setState({ loading: false, loggedIn: true });
+        } else {
+          this.setState({ loading: false, loggedIn: false });
+        }
+      });
+    };
+  
+    signup = e => {
+      this.setState({ loading: true, error: false });
+      e.preventDefault();
+      fire
+        .auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(u => {})
+        .then(u => {
+          this.setState({ loading: false });
+          this.props.history.push("/");
+        })
+        .catch(error => {
+          this.setState({ error: true, loading: false });
+        });
+    };
+  
+    render() {
+      return (
+            <div className="form1">
+  
+            {!this.state.loggedIn ?
+            <div>
+            <h2>
+                ¡Únete!
+            </h2>
+            <p>
+                Somos la mejor herramienta para encontrar productos veganos 
+            </p>
+            </div>
+            : null }
+  
+            {!this.state.loggedIn ? (
+              <Form>
+                
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  placeholder="Email"
+                  name="email"
+                  autoComplete="username"
+                />
+                <input
+                  onChange={this.handleChange}
+                  placeholder="Password"
+                  name="password"
+                  autoComplete="current-password"
+                  type="password"
+                />
+
+                <br>
+                </br>
+                {this.state.error ? (
+                      <p>
+                          El correo que ingresaste ya está registrado.
+                      </p>
+                   
+                ) : null}
+  
+                <div className="ui buttons fluid">
+                  <Button onClick={this.signup} className="ui button green">
+                    Regístrate 
+                  </Button>
+                </div>
+
                
-//                  <button  onClick={this.signup} className="btn-2">Registrarse</button>
-           
-//             </div>
+                {!this.state.loading &&
+                      !this.state.loggedIn && (
+                        <div>
+                          
+                          Si ya tienes una cuenta <a href="/">Inicia Sesión</a>
 
-
-
-//         );
-//     }
-
-
-// }
-
-// export default Register;
+                        </div>
+                      )}
+                 
+            
+                
+              </Form>
+            ) : null}
+  
+            {this.state.loggedIn ? <LogIn /> : null}
+  
+          </div>
+      );
+    }
+  }
+  
+  export default Signup;
+ 
